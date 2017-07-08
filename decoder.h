@@ -29,13 +29,13 @@
 
 /* It will be counted if the other opens without closing one. */
 #define EXPECTING_ARRAY 15 /* [1, 2], [3, 4], [5, 6] 	-> 1 array expecting
-							  [1, [2, 3, [4,5]]] 		-> 3 array expecting */
+			      [1, [2, 3, [4,5]]] 	-> 3 array expecting */
 
 #define EXPECTING_MAP 	15 /* Same as array */
 
-#define EXPECTING_STATE 15 /* [] 				-> 1 state
-							  [1, [1, 2]] 		-> 2 state
-							  [[1, [2, 3]]] 	-> 3 state */
+#define EXPECTING_STATE 15 /* [] 		-> 1 state
+                              [1, [1, 2]] 	-> 2 state
+			      [[1, [2, 3]]] 	-> 3 state */
 
 /* Static value used for embedded systems
    as you know, dynamic memory allocation
@@ -57,7 +57,7 @@ typedef enum {
 } enum_state;
 
 enum_state state;
-unsigned int currentLength;
+unsigned int current_length;
 
 /* Holds result data which is human readable format */
 unsigned char result[RESULT_SIZE];

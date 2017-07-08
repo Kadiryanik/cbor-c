@@ -47,24 +47,24 @@ void decode(input_t *in) {
         if(state == STATE_TYPE) {
             if(has_bytes(in, 1)) {
                 unsigned char type = get_byte(in);
-                unsigned char majorType = type >> 5;
-                unsigned char minorType = (unsigned char) (type & 31);
+                unsigned char major_type = type >> 5;
+                unsigned char minor_type = (unsigned char) (type & 31);
 
-                switch(majorType) {
+                switch(major_type) {
                     case 0: // positive integer
-                        if(minorType < 24) {
-                            on_integer(minorType);
-                        } else if(minorType == 24) { // 1 byte
-                            currentLength = 1;
+                        if(minor_type < 24) {
+                            on_integer(minor_type);
+                        } else if(minor_type == 24) { // 1 byte
+                            current_length = 1;
                             state = STATE_PINT;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_PINT;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_PINT;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_PINT;
                         } else {
                             state = STATE_ERROR;
@@ -72,19 +72,19 @@ void decode(input_t *in) {
                         }
                         break;
                     case 1: // negative integer
-                        if(minorType < 24) {
-                            on_integer(-1 -minorType);
-                        } else if(minorType == 24) { // 1 byte
-                            currentLength = 1;
+                        if(minor_type < 24) {
+                            on_integer(-1 -minor_type);
+                        } else if(minor_type == 24) { // 1 byte
+                            current_length = 1;
                             state = STATE_NINT;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_NINT;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_NINT;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_NINT;
                         } else {
                             state = STATE_ERROR;
@@ -92,20 +92,20 @@ void decode(input_t *in) {
                         }
                         break;
                     case 2: // bytes
-                        if(minorType < 24) {
+                        if(minor_type < 24) {
                             state = STATE_BYTES_DATA;
-                            currentLength = minorType;
-                        } else if(minorType == 24) {
+                            current_length = minor_type;
+                        } else if(minor_type == 24) {
                             state = STATE_BYTES_SIZE;
-                            currentLength = 1;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                            current_length = 1;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_BYTES_SIZE;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_BYTES_SIZE;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_BYTES_SIZE;
                         } else {
                             state = STATE_ERROR;
@@ -113,20 +113,20 @@ void decode(input_t *in) {
                         }
                         break;
                     case 3: // string
-                        if(minorType < 24) {
+                        if(minor_type < 24) {
                             state = STATE_STRING_DATA;
-                            currentLength = minorType;
-                        } else if(minorType == 24) {
+                            current_length = minor_type;
+                        } else if(minor_type == 24) {
                             state = STATE_STRING_SIZE;
-                            currentLength = 1;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                            current_length = 1;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_STRING_SIZE;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_STRING_SIZE;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_STRING_SIZE;
                         } else {
                             state = STATE_ERROR;
@@ -134,19 +134,19 @@ void decode(input_t *in) {
                         }
                         break;
                     case 4: // array
-                        if(minorType < 24) {
-                            on_array(minorType);
-                        } else if(minorType == 24) {
+                        if(minor_type < 24) {
+                            on_array(minor_type);
+                        } else if(minor_type == 24) {
                             state = STATE_ARRAY;
-                            currentLength = 1;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                            current_length = 1;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_ARRAY;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_ARRAY;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_ARRAY;
                         } else {
                             state = STATE_ERROR;
@@ -154,19 +154,19 @@ void decode(input_t *in) {
                         }
                         break;
                     case 5: // map
-                        if(minorType < 24) {
-                            on_map(minorType);
-                        } else if(minorType == 24) {
+                        if(minor_type < 24) {
+                            on_map(minor_type);
+                        } else if(minor_type == 24) {
                             state = STATE_MAP;
-                            currentLength = 1;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                            current_length = 1;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_MAP;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_MAP;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_MAP;
                         } else {
                             state = STATE_ERROR;
@@ -174,19 +174,19 @@ void decode(input_t *in) {
                         }
                         break;
                     case 6: // tag
-                        if(minorType < 24) {
-                            on_tag(minorType);
-                        } else if(minorType == 24) {
+                        if(minor_type < 24) {
+                            on_tag(minor_type);
+                        } else if(minor_type == 24) {
                             state = STATE_TAG;
-                            currentLength = 1;
-                        } else if(minorType == 25) { // 2 byte
-                            currentLength = 2;
+                            current_length = 1;
+                        } else if(minor_type == 25) { // 2 byte
+                            current_length = 2;
                             state = STATE_TAG;
-                        } else if(minorType == 26) { // 4 byte
-                            currentLength = 4;
+                        } else if(minor_type == 26) { // 4 byte
+                            current_length = 4;
                             state = STATE_TAG;
-                        } else if(minorType == 27) { // 8 byte
-                            currentLength = 8;
+                        } else if(minor_type == 27) { // 8 byte
+                            current_length = 8;
                             state = STATE_TAG;
                         } else {
                             state = STATE_ERROR;
@@ -196,8 +196,8 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_PINT) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
                         on_integer(get_byte(in));
                         state = STATE_TYPE;
@@ -222,8 +222,8 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_NINT) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
                         on_integer(-(int) get_byte(in));
                         state = STATE_TYPE;
@@ -249,18 +249,18 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_BYTES_SIZE) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
-                        currentLength = get_byte(in);
+                        current_length = get_byte(in);
                         state = STATE_BYTES_DATA;
                         break;
                     case 2:
-                        currentLength = get_short(in);
+                        current_length = get_short(in);
                         state = STATE_BYTES_DATA;
                         break;
                     case 4:
-                        currentLength = get_int(in);
+                        current_length = get_int(in);
                         state = STATE_BYTES_DATA;
                         break;
                     case 8:
@@ -270,26 +270,26 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_BYTES_DATA) {
-            if(has_bytes(in, currentLength)) {
-                unsigned char temp[currentLength];
+            if(has_bytes(in, current_length)) {
+                unsigned char temp[current_length];
                 unsigned char *data = temp;
-                get_bytes(in, data, currentLength);
+                get_bytes(in, data, current_length);
                 state = STATE_TYPE;
-                on_bytes(data, currentLength);
+                on_bytes(data, current_length);
             } else break;
         } else if(state == STATE_STRING_SIZE) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
-                        currentLength = get_byte(in);
+                        current_length = get_byte(in);
                         state = STATE_STRING_DATA;
                         break;
                     case 2:
-                        currentLength = get_short(in);
+                        current_length = get_short(in);
                         state = STATE_STRING_DATA;
                         break;
                     case 4:
-                        currentLength = get_int(in);
+                        current_length = get_int(in);
                         state = STATE_STRING_DATA;
                         break;
                     case 8:
@@ -299,22 +299,22 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_STRING_DATA) {
-            if(has_bytes(in, currentLength)) {
-                unsigned char temp[currentLength];
+            if(has_bytes(in, current_length)) {
+                unsigned char temp[current_length];
                 unsigned char *data = temp;
-                get_bytes(in, data, currentLength);
+                get_bytes(in, data, current_length);
                 state = STATE_TYPE;
-                on_string((const char *)data, (size_t)currentLength);
+                on_string((const char *)data, (size_t)current_length);
             } else break;
         } else if(state == STATE_ARRAY) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
                         on_array(get_byte(in));
                         state = STATE_TYPE;
                         break;
                     case 2:
-                        on_array(currentLength = get_short(in));
+                        on_array(current_length = get_short(in));
                         state = STATE_TYPE;
                         break;
                     case 4:
@@ -328,14 +328,14 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_MAP) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
                         on_map(get_byte(in));
                         state = STATE_TYPE;
                         break;
                     case 2:
-                        on_map(currentLength = get_short(in));
+                        on_map(current_length = get_short(in));
                         state = STATE_TYPE;
                         break;
                     case 4:
@@ -349,8 +349,8 @@ void decode(input_t *in) {
                 }
             } else break;
         } else if(state == STATE_TAG) {
-            if(has_bytes(in, currentLength)) {
-                switch(currentLength) {
+            if(has_bytes(in, current_length)) {
+                switch(current_length) {
                     case 1:
                         on_tag(get_byte(in));
                         state = STATE_TYPE;
@@ -391,7 +391,6 @@ void initialize_decoder(){
     state_offset = 0;
 
     map_reading_id = true;
-
     include_bytes = false;
 }
 
@@ -410,7 +409,7 @@ int set_history(){
             // if there another state AND it's item not compilated
             if(state_offset - 1 >= 0){
                 if((state_history[state_offset - 1] == STATE_MAP && 
-                				map_history[map_offset - 1] - 1 > 0) ||
+                			map_history[map_offset - 1] - 1 > 0) ||
                     (state_history[state_offset - 1] == STATE_ARRAY && 
                     			array_history[array_offset - 1] - 1 > 0)){
                     put_text("], ", 3);
